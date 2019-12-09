@@ -23,17 +23,20 @@
 # Set Parameters
 K=1000000
 timesteps=100
+N0=100 # Given that the mutation occurred when there were 100 cells
+
 # Drug absence (A)
-rNA=0.1
+rNA=0.1 # Growth rate for both populations is 0.1 in absence of drug
 rMA=0.1
 
 # Drug presence (P)
-rNP=-0.1
-rNP=0.05 # Mutants grow at 50% of growth rate for when drug is not present
+rNP=-0.1 # Non-mutants (N) grow at -0.1 when drug is present
+rMP=0.05 # Mutants (M) grow at 50% of growth rate for when drug is not present
 
-# Create vector to store N's
+# Create vector to store N's and set initial N
+# Set initial value
+Ns=numeric(length=timesteps)
+Ns[1]=N0
 
 # Simulate
-# Mutant simulation
 
-# Non-mutant simulation
