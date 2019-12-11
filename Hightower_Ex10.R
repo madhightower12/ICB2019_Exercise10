@@ -8,8 +8,8 @@
 # Non-mutant declines rapidly
 
 # Use model for Sub Populations
-  # Nt=Nt+(rN*Nt)*(1-(Nt+Mt)/K) # for non-mutant population
-  # Mt=Mt+(rM*Mt)*(1-(Nt+Mt)/K) # for mutant population
+  # Nt+1=Nt+((rN*Nt)*((1-(Nt+Mt)/K)) # for non-mutant population
+  # Mt+1=Mt+(rM*Mt)*(1-(Nt+Mt)/K) # for mutant population
 # Parameters
   # Growth rate in absence is 0.1 (rN=rM=0.1)
   # Carrying capacity (K) is one million cells
@@ -22,17 +22,16 @@
 
 # Set Parameters
 K=1000000
-timesteps=200
+timesteps=300
 N0=99 # Given that the mutation occurred when there were 100 cells
 M0=1 # and only one was a mutant
 
 # Drug absence (A)
-rNA=0.1 # Growth rate for both populations is 0.1 in absence of drug
-rMA=0.1
+r=0.1 # Growth rate for both populations is 0.1 in absence of drug
 
 # Drug presence (P)
-rNP=-0.1 # Non-mutants (N) grow at -0.1 when drug is present
-rMP=0.05 # Mutants (M) grow at 50% of growth rate for when drug is not present
+A=-0.1 # Non-mutants grow at -0.1 when drug is present
+B=0.5 # Mutants grow at 50% of growth rate for when drug is not present
 
 # Create vector to store N's and set initial N
 # Set initial value
@@ -42,18 +41,28 @@ Ms=numeric(length=timesteps)
 Ms[1]=M0
 
 # Simulate
-# When drug is not present
-for(t in 1:100){
-  Ns[t+1]=Ns[t]+(rNA*Ns[t])*((1-(Ns[t]+Ms[t]))/K)
-  Ms[t+1]=Ms[t]+(rMA*Ms[t])*((1-(Ns[t]+Ms[t]))/K) 
+# Mutant Population
+for(t in 1:(timesteps-1)){
+  if(t<150){
+    Ms[t+1]<-Ms[t]+r*Ms[t]*(1-(Ns[t]+Ms[t])/K)
+  }else if(t>150){
+    Ms[t+1]<-Ms[t]+B*Ms[t]*(1-(Ns[t]+Ms[t])/K)
+  }
 }
-# When drug is present
-for(t in 1:100){
-  Ns[t+1]=N[t]+(rN*N[t])*(1-(N[t]+M[t])/K)
-  Ms[t+1]=M[t]+(rM*M[t])*(1-(N[t]+M[t])/K) 
+#150 chosen as the cutoff after plotting growth in drug absence
+# And seeing approx where slope levels off to 0
+# Non-Mutant Population
+for(t in 1:(timesteps-1)){
+  if(t<150){
+    Ns[t+1]<-Ns[t]+r*Ns[t]*(1-(Ns[t]+Ms[t])/K)
+  }else if(t>150){
+    Ns[t+1]<-Ns[t]+A*Ns[t]*(1-(Ns[t]+Ms[t])/K)
+  }
 }
-
 # Put simulation into a dataframe
-library(ggplot2)
 healthy<-data.frame(time=1:timesteps,N=Ns)
 tumor<-data.frame(time=1:timesteps,M=Ms)
+# Plot data
+library(ggplot2)
+nonMutant<-ggplot(data=healthy,aes(x=time,y=N))+geom_line(col="green")
+mutant<-ggplot(data=cancer,aes(x=time,y=M))+geom_line(col="red")
