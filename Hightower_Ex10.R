@@ -30,7 +30,7 @@ M0=1 # and only one was a mutant
 r=0.1 # Growth rate for both populations is 0.1 in absence of drug
 
 # Drug presence (P)
-A=-0.1 # Non-mutants grow at -0.1 when drug is present
+A=(-0.1) # Non-mutants grow at -0.1 when drug is present
 B=0.05 # Mutants grow at 50% of growth rate for when drug is not present (50% of 0.1)
 
 # Create vector to store N's and set initial N
@@ -60,7 +60,6 @@ for(t in 1:(timesteps-1)){
     Ns[t+1]<-Ns[t]+(A)*Ns[t]*(1-(Ns[t]+Ms[t])/K)
   }
 }
-
 #Put simulation into a dataframe
 healthy<-data.frame(time=1:timesteps,N=Ns)
 tumor<-data.frame(time=1:timesteps,M=Ms)
