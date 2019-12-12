@@ -22,7 +22,7 @@
 
 # Set Parameters
 K=1000000
-timesteps=200
+timesteps=250
 N0=99 # Given that the mutation occurred when there were 100 cells
 M0=1 # and only one was a mutant
 
@@ -45,7 +45,7 @@ Ms[1]=M0
 for(t in 1:150){
   Ms[t+1]<-Ms[t]+r*Ms[t]*(1-(Ns[t]+Ms[t])/K)
 }
-for(t in 151:200){
+for(t in 151:249){
   Ms[t+1]<-Ms[t]+B*Ms[t]*(1-(Ns[t]+Ms[t])/K)
 }
 #150 chosen as the cutoff after plotting growth in drug absence
@@ -54,7 +54,7 @@ for(t in 151:200){
 for(t in 1:150){
   Ns[t+1]<-Ns[t]+r*Ns[t]*(1-(Ns[t]+Ms[t])/K)
 }
-for(t in 151:(timesteps-1)){
+for(t in 151:249){
   Ns[t+1]<-Ns[t]+(A)*Ns[t]*(1-(Ns[t]+Ms[t])/K)
 }
 #Put simulation into a dataframe
@@ -62,5 +62,6 @@ healthy<-data.frame(time=1:timesteps,N=Ns)
 tumor<-data.frame(time=1:timesteps,M=Ms)
 # Plot data
 library(ggplot2)
-ggplot(data=healthy,aes(x=time,y=N))+geom_line(col="green")
-ggplot(data=tumor,aes(x=time,y=M))+geom_line(col="red")
+growth<-ggplot()+geom_line(data=healthy,aes(x=time,y=N),color="blue")+
+  geom_line(data=tumor,aes(x=time,y=M),color="red")+
+  xlab('Time')+ylab('# of Cells')
